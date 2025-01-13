@@ -1,0 +1,56 @@
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.text-white,
+.text-white *,
+.text-white *:visited {
+  color: #fff;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
+}
+
+.results-wrapper {
+  height: calc(100vh - 87.5px);
+  overflow: hidden;
+}
+
+va-card {
+  position: relative;
+  z-index: 0;
+  color: #fff;
+}
+
+va-card .va-card__img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+va-card::before {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: -1;
+}
+
+va-link {
+  background: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 3px;
+}
