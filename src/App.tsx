@@ -3,7 +3,7 @@ import './App.css'
 import Search from './search/search';
 import Results from './search/results';
 import { useEffect, useState } from 'react';
-import { setQueryParams } from './utils';
+import { getAllQueryParams, getQueryParam, setQueryParams } from './utils';
 import { VaHeaderMinimal } from '@department-of-veterans-affairs/web-components/react-bindings';
 import { Facilities, Query } from './interfaces';
 import { facilities as facilitiesApi } from './api';
@@ -18,7 +18,11 @@ const init: Query = {
 }
 
 function App() {
-	const [query, setQuery] = useState({...init});
+	// assuming all query params are valid
+	const [query, setQuery] = useState({
+		...init,
+		...getAllQueryParams(window.location.search),
+	});
 	const [facilities, setFacilities] = useState({
 		data: [],
 		meta: null,
@@ -74,7 +78,8 @@ function App() {
 
 	useEffect(() => {
 		setQueryParams({
-			...init
+			...init,
+			...getAllQueryParams(window.location.search),
 		})
 	}, []);
 
