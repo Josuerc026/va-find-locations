@@ -43,7 +43,7 @@ function App() {
 		const getFacilities = async () => {
 			try {
 				const response = await facilitiesApi(query).get();
-				if (response.status === 200 && response.statusText === 'OK') {
+				if (response.status === 200 && response.ok === true) {
 					const vaData = await response.json();
 					if (vaData?.data && vaData?.meta) {
 						setVaFacilities({
