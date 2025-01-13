@@ -42,7 +42,7 @@ export default function Results({vaFacilities, setQuery}: {
                         </h3>
                     ) : ''
             }
-            <div className={`h-100 overflow-y-scroll flex-fill ${vaFacilities.loading ? `d-flex flex-column justify-content-center` : ``}`}>
+            <div className={`h-100 overflow-y-scroll overflow-x-hidden flex-fill ${vaFacilities.loading ? `d-flex flex-column justify-content-center` : ``}`}>
                 {
                     vaFacilities.loading && !vaFacilities.error ? 
                         <VaLoadingIndicator

@@ -18,6 +18,10 @@
   overflow-y: scroll;
 }
 
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
 .results-wrapper {
   height: calc(100vh - 87.5px);
   overflow: hidden;
