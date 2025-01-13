@@ -3,7 +3,7 @@ import { MB_SESSION_TOKEN_KEY } from "./constants";
 import { Query } from "./interfaces";
 import { generateSessionId } from "./utils";
 
-export const MAPBOX_TOKEN = 'pk.eyJ1Ijoiam9zdWVyYzAyNiIsImEiOiJjbTU5MHRvMzEwaWZmMmlvZGRtOGoyMmdzIn0.WkXRbBmq2QpDXpu-7E54-w';
+export const MAPBOX_TOKEN = 'pk.eyJ1Ijoiam9zdWVyYzAyNiIsImEiOiJjbTV1bG1nbDgxOG1kMmxweGU3bHkwcDQ3In0.PU6wn8O-h7yyej7IvTB6Gw';
 
 const facilities = ({lat, lng, radius, serviceType, page}: Query) => {
 	return {
