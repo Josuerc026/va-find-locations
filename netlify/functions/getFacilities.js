@@ -16,7 +16,10 @@ export const handler = async (event, context) => {
         const data = await res.json();
             return {
                 statusCode: 200,
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                }
             }
     } catch(error) {
         const errors = await error.json();
