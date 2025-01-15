@@ -80,7 +80,18 @@ function App() {
 		setQueryParams({
 			...init,
 			...getAllQueryParams(window.location.search),
-		})
+		});
+		
+		const onHistoryChange = () => {
+			const currentUrlParams = getAllQueryParams(window.location.search);
+			setQuery({
+				...currentUrlParams
+			});
+		}
+		window.addEventListener('popstate', onHistoryChange);
+		return () => {
+			window.removeEventListener('popstate', onHistoryChange);
+		};
 	}, []);
 
 	return (
