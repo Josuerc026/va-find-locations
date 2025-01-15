@@ -10,6 +10,7 @@ import { facilities as facilitiesApi } from './api';
 
 // init in Washington DC
 const init: Query = {
+	name: 'Washington, D.C.',
 	lat: 38.90787209138959,
 	lng: -77.0361947316423,
 	serviceType: 'All',
@@ -52,6 +53,13 @@ function App() {
 					if (vaData?.data && vaData?.meta) {
 						setVaFacilities({
 							...vaData,
+							loading: false,
+							error: false
+						});
+					} else {
+						setVaFacilities({
+							...vaData,
+							data: [],
 							loading: false,
 							error: false
 						});
@@ -99,7 +107,7 @@ function App() {
 		<header className="header" style={{minHeight: 'auto'}}>
 			<VaHeaderMinimal
 				header="Find VA Locations"
-				subheader="near you"
+				subheader={`near ${`${query?.name}` || 'you'}`}
 			/>
 		</header>
 		<div className="container-fluid w-100 m-0 p-0 flex-fill d-flex flex-column">
@@ -117,6 +125,7 @@ function App() {
 					<Results
 						vaFacilities={facilities}
 						setQuery={setGlobalQuery}
+						query={query}
 					/>
 				</div>
 				<div className="col-12 col-md-6">

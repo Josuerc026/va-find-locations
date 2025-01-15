@@ -5,13 +5,15 @@ import { Facilities, Query } from "../interfaces";
 import { VaLoadingIndicator } from '@department-of-veterans-affairs/web-components/react-bindings';
 import { VaButton } from '@department-of-veterans-affairs/web-components/react-bindings';
 
-export default function Results({vaFacilities, setQuery}: {
+export default function Results({vaFacilities, setQuery, query}: {
     vaFacilities: Facilities,
-    setQuery: (query: Query) => void
+    setQuery: (query: Query) => void,
+    query: Query
 }) {
     const handlePageSelect = (e: any) => {
-        const {lat, lng, serviceType, radius} = getAllQueryParams(window.location.search);
+        const {name, lat, lng, serviceType, radius} = getAllQueryParams(window.location.search);
         setQuery({
+            name,
             lat,
             lng,
             serviceType,
@@ -21,8 +23,9 @@ export default function Results({vaFacilities, setQuery}: {
     }
 
     const onRetry = () => {
-        const {lat, lng, serviceType, radius, page} = getAllQueryParams(window.location.search);
+        const {name, lat, lng, serviceType, radius, page} = getAllQueryParams(window.location.search);
         setQuery({
+            name,
             lat,
             lng,
             serviceType,
@@ -42,7 +45,7 @@ export default function Results({vaFacilities, setQuery}: {
                         </h3>
                     ) : ''
             }
-            <div className={`h-100 overflow-y-scroll overflow-x-hidden flex-fill ${vaFacilities.loading ? `d-flex flex-column justify-content-center` : ``}`}>
+            <div className={`h-100 overflow-y-scroll overflow-x-hidden flex-fill ${vaFacilities.loading || !vaFacilities?.data.length ? `d-flex flex-column justify-content-center` : ``}`}>
                 {
                     vaFacilities.loading && !vaFacilities.error ? 
                         <VaLoadingIndicator
@@ -50,7 +53,7 @@ export default function Results({vaFacilities, setQuery}: {
                             message="Loading facilities..."
                         /> :
                         <div className="row">
-                            {(
+                            {!!vaFacilities?.data?.length ? (
                                 vaFacilities.data.map((facility: any) => {
                                     return (
                                         <div key={facility.id} className="mb-3 col-12 col-xl-6">
@@ -78,7 +81,12 @@ export default function Results({vaFacilities, setQuery}: {
                                         </div>
                                     )
                                 })
-                            )}
+                            ) : 
+                                <>
+                                    <h3>No results found for <u style={{textTransform: 'capitalize'}}>{query?.name}</u></h3>
+                                    <p>Try searching for VA locations in another location.</p>
+                                </>
+                            }
                         </div>
                 }
                 {vaFacilities.error && !vaFacilities?.data?.length ? 

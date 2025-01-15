@@ -1,4 +1,5 @@
 export interface Query {
+    name: string;
     lat: number;
     lng: number;
     serviceType: string;

@@ -5,6 +5,7 @@ import { VaButton } from '@department-of-veterans-affairs/web-components/react-b
 import { VaSearchInput } from '@department-of-veterans-affairs/web-components/react-bindings';
 import { VaSelect } from '@department-of-veterans-affairs/web-components/react-bindings';
 import { Query } from '../interfaces';
+import { getQueryParam } from '../utils';
 
 export default function Search({setQuery}: {
   setQuery: (query: Query) => void
@@ -15,6 +16,11 @@ export default function Search({setQuery}: {
 		name: string;
 		mapbox_id: string;
 		place_formatted: string;
+		context: {
+			region: {
+				name: string
+			}
+		}
 	}[]);
 	const [userInput, setUserInput] = useState('');
 	const [selectedServiceType, setServiceType] = useState('PrimaryCare');
@@ -23,7 +29,7 @@ export default function Search({setQuery}: {
 	const onUserInput = async (e: any) => {
 		const response = await mbSuggestions().get(e.target.value);
 		const data = await response.json();
-		const list = data.suggestions.map((suggestion: any) => `${suggestion.name}, ${suggestion.place_formatted}`);
+		const list = data.suggestions.map((suggestion: any) => `${suggestion.name}, ${suggestion.context.region.name}`);
 		setSuggestions(list);
 		setLocations(data.suggestions);
 	}
@@ -40,7 +46,7 @@ export default function Search({setQuery}: {
 	const onSearch = async () => {
 		try {
 			const locationInfo = locations.find(location => 
-				`${location.name}, ${location.place_formatted}`.toLowerCase() === userInput
+				`${location.name}, ${location.context.region.name}`.toLowerCase() === userInput
 			);
 			if (!locationInfo?.mapbox_id) return;
 			const response = await retrieve(locationInfo.mapbox_id).get();
@@ -48,6 +54,7 @@ export default function Search({setQuery}: {
 			if (!features.length) return; 
 			const {latitude: lat, longitude: lng} = features[0].properties.coordinates;
 			setQuery({
+				name: userInput,
 				lat,
 				lng,
 				serviceType: selectedServiceType,
@@ -65,7 +72,7 @@ export default function Search({setQuery}: {
 			onInput={onUserInput}
 			onSubmit={onUserSubmit}
 			suggestions={suggestions}
-			value={userInput}
+			value={(userInput || getQueryParam(window.location.search, 'name') || '')}
 		/>
 		<VaSelect
 			label="Facility Type"
@@ -95,9 +102,9 @@ export default function Search({setQuery}: {
 			showError={true}
 		>
 			{
-			Object.keys(healthServices).map((serviceKey) => 
-				<option key={serviceKey} value={serviceKey}>{healthServices[serviceKey]}</option>
-			)
+				Object.keys(healthServices).map((serviceKey) => 
+					<option key={serviceKey} value={serviceKey}>{healthServices[serviceKey]}</option>
+				)
 			}
 		</VaSelect>
 		<br/>
