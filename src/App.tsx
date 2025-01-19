@@ -10,7 +10,7 @@ import { facilities as facilitiesApi } from './api';
 
 // init in Washington DC
 const init: Query = {
-	name: 'Washington, D.C.',
+	name: 'washington, district of columbia',
 	lat: 38.90787209138959,
 	lng: -77.0361947316423,
 	serviceType: 'All',
@@ -122,6 +122,7 @@ function App() {
 					<h1 className="mt-3" style={{fontSize: '1.75rem'}}>Find a VA location near you</h1>
 					<p>Find a VA location or in-network community care provider.</p>
 					<Search
+						query={query}
 						setQuery={setGlobalQuery}
 					/>
 					</div>

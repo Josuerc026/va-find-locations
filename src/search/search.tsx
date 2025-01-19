@@ -5,10 +5,10 @@ import { VaButton } from '@department-of-veterans-affairs/web-components/react-b
 import { VaSearchInput } from '@department-of-veterans-affairs/web-components/react-bindings';
 import { VaSelect } from '@department-of-veterans-affairs/web-components/react-bindings';
 import { Query } from '../interfaces';
-import { getQueryParam } from '../utils';
 
-export default function Search({setQuery}: {
-  setQuery: (query: Query) => void
+export default function Search({query, setQuery}: {
+	query: Query;
+	setQuery: (query: Query) => void
 }) {
 	const radiusOptions = [25, 50, 75, 100];
 	const [suggestions, setSuggestions] = useState([]);
@@ -22,9 +22,9 @@ export default function Search({setQuery}: {
 			}
 		}
 	}[]);
-	const [userInput, setUserInput] = useState('');
-	const [selectedServiceType, setServiceType] = useState('PrimaryCare');
-	const [selectedRadius, setRadius] = useState(25);
+	const [userInput, setUserInput] = useState(query.name || '');
+	const [selectedServiceType, setServiceType] = useState(query.serviceType || '');
+	const [selectedRadius, setRadius] = useState(query.radius || radiusOptions[0]);
 	
 	const onUserInput = async (e: any) => {
 		const response = await mbSuggestions().get(e.target.value);
@@ -45,6 +45,9 @@ export default function Search({setQuery}: {
 	}
 	const onSearch = async () => {
 		try {
+			if (userInput === query?.name || (!userInput || !locations.length)) {
+				alert('Search for a new location or try again.');
+			}
 			const locationInfo = locations.find(location => 
 				`${location.name}, ${location.context.region.name}`.toLowerCase() === userInput
 			);
@@ -72,7 +75,7 @@ export default function Search({setQuery}: {
 			onInput={onUserInput}
 			onSubmit={onUserSubmit}
 			suggestions={suggestions}
-			value={(userInput || getQueryParam(window.location.search, 'name') || '')}
+			value={userInput}
 		/>
 		<VaSelect
 			label="Facility Type"
@@ -89,7 +92,7 @@ export default function Search({setQuery}: {
 		>
 		{
 			radiusOptions.map(radiusOption => 
-			<option key={radiusOption} value={radiusOption}>{radiusOption} miles</option>
+				<option key={radiusOption} value={radiusOption}>{radiusOption} miles</option>
 			)
 		}
 		</VaSelect>
