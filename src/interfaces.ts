@@ -8,6 +8,7 @@ export interface Query {
 }
 
 export interface Facility {
+    id: string;
     attributes: {
         lat: number;
         long: number;

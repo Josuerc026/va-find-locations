@@ -27,6 +27,41 @@
   overflow: hidden;
 }
 
+.results-container {
+  scroll-behavior: smooth;
+}
+
+va-card .facility-idx {
+  display: inline-block;
+  padding: 0.5rem;
+  background: #fff;
+  color: #000;
+  border-radius: 100%;
+  width: 10px;
+  height: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#focused-facility va-card .facility-idx {
+  background: #face00;
+}
+
+.va-location-marker {
+  background: #efefef;
+  border-radius: 100%;
+  width: 25px;
+  height: 25px;
+  border: 2px solid #face00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
 va-card {
   position: relative;
   z-index: 0;
@@ -49,7 +84,9 @@ va-card::before {
   display: block;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
+  left: 0;
+  top: 0;
+  background: rgba(0,0,0,0.7);
   z-index: -1;
 }
 

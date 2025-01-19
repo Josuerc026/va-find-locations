@@ -3,9 +3,9 @@ import './App.css'
 import Search from './search/search';
 import Results from './search/results';
 import { useEffect, useState } from 'react';
-import { getAllQueryParams, getQueryParam, setQueryParams } from './utils';
+import { getAllQueryParams, setQueryParams } from './utils';
 import { VaHeaderMinimal } from '@department-of-veterans-affairs/web-components/react-bindings';
-import { Facilities, Query } from './interfaces';
+import { Facilities, Facility, Query } from './interfaces';
 import { facilities as facilitiesApi } from './api';
 
 // init in Washington DC
@@ -30,6 +30,7 @@ function App() {
 		loading: true,
 		error: false
 	} as Facilities);
+	const [focusedFacility, setFocusedFacility] = useState({} as Facility);
 
 	const setGlobalQuery = (query: Query) => {
 		setQueryParams(query);
@@ -38,6 +39,10 @@ function App() {
 
 	const setVaFacilities = (vaFacilities: Facilities) => {
 		setFacilities(vaFacilities);
+	}
+
+	const setFocused = (facility: Facility) => {
+		setFocusedFacility(facility);
 	}
 
 	useEffect(() => {
@@ -123,6 +128,7 @@ function App() {
 				</div>
 				<div className="col-12 col-md-3 col-xl-4" style={{borderLeft: '1px solid #000'}}>
 					<Results
+						focusedFacility={focusedFacility}
 						vaFacilities={facilities}
 						setQuery={setGlobalQuery}
 						query={query}
@@ -131,6 +137,7 @@ function App() {
 				<div className="col-12 col-md-6">
 					<Map
 						query={query}
+						setFocusedFacility={setFocused}
 						vaFacilities={facilities}
 					/>
 				</div>
