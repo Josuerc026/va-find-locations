@@ -25,7 +25,10 @@ export const handler = async (event, context) => {
         const errors = await error.json();
         return {
             statusCode: error.status,
-            body: JSON.stringify({...errors})
+            body: JSON.stringify({...errors}),
+            headers: {
+                "Content-Type": "application/json",
+            }
         }
     }
 }
