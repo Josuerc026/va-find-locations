@@ -25,3 +25,4 @@ export const HEALTH_SERVICES: {
 
 // for local storage
 export const MB_SESSION_TOKEN_KEY = 'mapboxSessionToken';
+export const MB_STYLE = 'mapbox://styles/mapbox/dark-v11';

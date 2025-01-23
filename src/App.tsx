@@ -1,7 +1,7 @@
-import Map from './map';
+import Map from './components/Map';
 import './App.css'
-import Search from './search/search';
-import Results from './search/results';
+import Search from './components/search/Search';
+import Results from './components/search/Results';
 import { useEffect, useState } from 'react';
 import { getAllQueryParams, setQueryParams } from './utils';
 import { VaHeaderMinimal } from '@department-of-veterans-affairs/web-components/react-bindings';
