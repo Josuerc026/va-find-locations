@@ -22,48 +22,63 @@ export default function Search({query, setQuery}: {
 	setQuery: (query: Query) => void
 }) {
 	const radiusOptions = [25, 50, 75, 100];
+	const [searchQuery, setSearchQuery] = useState({
+		location: query?.name || '',
+		serviceType: query?.serviceType || '',
+		radius: query?.radius || radiusOptions[0]
+	});
 	const [suggestions, setSuggestions] = useState([]);
 	const [locations, setLocations] = useState([] as MapboxLocation[]);
-	const [userInput, setUserInput] = useState(query.name || '');
-	const [selectedServiceType, setServiceType] = useState(query.serviceType || '');
-	const [selectedRadius, setRadius] = useState(query.radius || radiusOptions[0]);
 	
 	const onUserInput = async (e: any) => {
-		const response = await mbSuggestions().get(e.target.value);
-		const data = await response.json();
-		const list = data.suggestions.map((suggestion: any) => `${suggestion.name}, ${suggestion.context.region.name}`);
-		setSuggestions(list);
-		setLocations(data.suggestions);
+		try {
+			const response = await mbSuggestions().get(e.target.value);
+			const data = await response.json();
+			const list = data.suggestions.map((suggestion: any) => `${suggestion.name}, ${suggestion.context.region.name}`);
+			setSuggestions(list);
+			setLocations(data.suggestions);
+		} catch(e: any) {
+			throw new Error(e);
+		}
 	}
 	const onUserSubmit = (e: any) => {
-		const inputValue = e.target.value;
-		setUserInput(inputValue);
+		setSearchQuery({
+			...searchQuery,
+			location: e.target.value
+		});
 	}
 	const onUserSelect = (e: any) => {
-		setServiceType(e.target.value);
+		setSearchQuery({
+			...searchQuery,
+			serviceType: e.target.value
+		})
 	}
 	const onUserRadiusSelect = (e: any) => {
-		setRadius(e.target.value);
+		setSearchQuery({
+			...searchQuery,
+			radius: e.target.value
+		})
 	}
 	const onSearch = async () => {
+		const {location, serviceType, radius} = searchQuery;
+		if (location === query?.name || (!location || !locations.length)) {
+			return alert('Search for a new location or try again.');
+		}
+		const locationInfo = locations.find(location => 
+			`${location.name}, ${location.context.region.name}`.toLowerCase() === searchQuery.location
+		);
+		if (!locationInfo?.mapbox_id) return;
 		try {
-			if (userInput === query?.name || (!userInput || !locations.length)) {
-				alert('Search for a new location or try again.');
-			}
-			const locationInfo = locations.find(location => 
-				`${location.name}, ${location.context.region.name}`.toLowerCase() === userInput
-			);
-			if (!locationInfo?.mapbox_id) return;
 			const response = await retrieve(locationInfo.mapbox_id).get();
 			const {features} = await response.json();
 			if (!features.length) return; 
 			const {latitude: lat, longitude: lng} = features[0].properties.coordinates;
 			setQuery({
-				name: userInput,
+				name: location,
 				lat,
 				lng,
-				serviceType: selectedServiceType,
-				radius: selectedRadius,
+				serviceType: serviceType,
+				radius: radius,
 				page: 1
 			});
 		} catch(err: any) {
@@ -77,7 +92,7 @@ export default function Search({query, setQuery}: {
 			onInput={onUserInput}
 			onSubmit={onUserSubmit}
 			suggestions={suggestions}
-			value={userInput}
+			value={searchQuery.location}
 		/>
 		<VaSelect
 			label="Facility Type"
@@ -90,7 +105,7 @@ export default function Search({query, setQuery}: {
 			label="Radius"
 			name="Radius"
 			onVaSelect={onUserRadiusSelect}
-			value={selectedRadius.toString()}
+			value={searchQuery.radius.toString()}
 		>
 		{
 			radiusOptions.map(radiusOption => 
@@ -103,7 +118,7 @@ export default function Search({query, setQuery}: {
 			message-aria-describedby="Optional description text for screen readers"
 			name="service-types"
 			onVaSelect={onUserSelect}
-			value={selectedServiceType}
+			value={searchQuery.serviceType}
 			showError={true}
 		>
 			{
