@@ -56,7 +56,7 @@ export default function Results({vaFacilities, setQuery, query, focusedFacility}
                             (
                                 <h3 className="m-0 p-0">
                                     Showing {vaFacilities?.meta?.pagination.perPage * (vaFacilities.meta.pagination.currentPage - 1)+1} - 
-                                    {(vaFacilities?.meta?.pagination.perPage * vaFacilities.meta.pagination.currentPage) - vaFacilities?.meta?.pagination.perPage * vaFacilities.meta.pagination.currentPage % vaFacilities?.meta?.pagination.totalEntries % vaFacilities.meta.pagination.perPage} of {vaFacilities?.meta?.pagination.totalEntries} Results
+                                    {(vaFacilities?.meta?.pagination?.totalEntries < vaFacilities?.meta?.pagination.perPage ? vaFacilities?.meta?.pagination?.totalEntries : (vaFacilities?.meta?.pagination.perPage * vaFacilities.meta.pagination.currentPage) - vaFacilities?.meta?.pagination.perPage * vaFacilities.meta.pagination.currentPage % vaFacilities?.meta?.pagination.totalEntries % vaFacilities.meta.pagination.perPage)} of {vaFacilities?.meta?.pagination.totalEntries} Results
                                 </h3>
                             ) : ''
                     }
